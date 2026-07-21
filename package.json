@@ -1,0 +1,72 @@
+{
+  "name": "@planoda/sdk",
+  "version": "0.1.1",
+  "description": "Type-safe TypeScript SDK for the Planoda API — the AI-native work platform that replaces Linear, ClickUp, Monday & Trello.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./webhooks": {
+      "types": "./dist/webhooks.d.ts",
+      "import": "./dist/webhooks.mjs",
+      "require": "./dist/webhooks.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "DESIGN.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "planoda",
+    "project-management",
+    "issue-tracker",
+    "task-management",
+    "linear-alternative",
+    "clickup-alternative",
+    "jira-alternative",
+    "monday-alternative",
+    "trello-alternative",
+    "ai",
+    "ai-agent",
+    "api",
+    "sdk",
+    "typescript"
+  ],
+  "homepage": "https://planoda.com/developers/sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/planoda/sdk.git"
+  },
+  "bugs": {
+    "url": "https://planoda.com/support"
+  },
+  "author": "Planoda <hello@planoda.com> (https://planoda.com)",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.4"
+  }
+}
