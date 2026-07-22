@@ -17,6 +17,13 @@ export type CustomerRequestStatus =
   | "resolved"
   | "spam";
 
+/**
+ * Every source a customer request can *have*. Returned on reads.
+ *
+ * `slack` and `web-form` are assigned by Planoda when a request genuinely
+ * arrives through those channels — they cannot be set by an API caller (see
+ * {@link CustomerRequestCreateSource}), so that a client can't forge an origin.
+ */
 export type CustomerRequestSource =
   | "manual"
   | "asks"
@@ -26,6 +33,15 @@ export type CustomerRequestSource =
   | "email"
   | "slack"
   | "web-form";
+
+/**
+ * The subset of {@link CustomerRequestSource} an API caller may set on create.
+ * Sending `slack` or `web-form` is rejected by the API with a 422.
+ */
+export type CustomerRequestCreateSource = Exclude<
+  CustomerRequestSource,
+  "slack" | "web-form"
+>;
 
 export interface CustomerRequest {
   bodyMd: string;
@@ -52,7 +68,8 @@ export interface CustomerRequestsListInput {
 export interface CustomerRequestCreateInput {
   bodyMd?: string;
   customerId: string;
-  source?: CustomerRequestSource;
+  /** Only client-settable sources; `slack`/`web-form` are system-assigned. */
+  source?: CustomerRequestCreateSource;
   sourceRef?: string;
   subject: string;
   [key: string]: unknown;
