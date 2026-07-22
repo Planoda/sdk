@@ -1,6 +1,6 @@
 {
   "name": "@planoda/sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Type-safe TypeScript SDK for the Planoda API — the AI-native work platform that replaces Linear, ClickUp, Monday & Trello.",
   "license": "MIT",
   "type": "module",

@@ -59,7 +59,7 @@ export interface PlanodaClientConfig {
 }
 
 const DEFAULT_BASE_URL = "https://planoda.com/api";
-const DEFAULT_USER_AGENT = "@planoda/sdk/0.1.0";
+const DEFAULT_USER_AGENT = "@planoda/sdk/0.1.2";
 const DEFAULT_MAX_RETRIES = 5;
 const DEFAULT_INITIAL_BACKOFF_MS = 200;
 const MAX_BACKOFF_MS = 30_000;
