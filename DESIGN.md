@@ -4,32 +4,34 @@ This document captures the architectural decisions behind `@planoda/sdk`. It is 
 companion to `README.md` (which is the consumer-facing surface). Anything that
 looks ambiguous in the README should resolve against this doc.
 
-## Code generation pipeline
+## Resource layout (today) & the codegen direction (roadmap)
 
-The SDK is **not** hand-written per-resource. Instead, a `codegen` script
-(landing in a follow-up wave) consumes the exported `AppRouter` type from the
-main app and emits thin per-resource wrappers.
+**Today the SDK is hand-written per-resource.** Each namespace lives in its own
+module under `src/resources/` (`issues.ts`, `projects.ts`, `comments.ts`,
+`customer-requests.ts`) as a thin factory over the shared `PlanodaClient`
+transport (`src/client.ts`) — it mirrors the **curated, versioned REST contract**
+the server exposes at `/api/v1/**` (see `src/server/api/rest/registry.ts` in the
+app), not the full internal tRPC router. Adding a resource = one small module
+plus a getter on `PlanodaClient`. This keeps the public surface deliberately
+small and stable, decoupled from internal router churn.
 
-Pipeline stages:
+### Roadmap — optional codegen (not yet implemented)
 
-1. **Type import.** `import type { AppRouter } from '@/server/router'` — the
-   SDK builds against the same type the server publishes. No JSON Schema, no
-   OpenAPI intermediate — the TypeScript type **is** the contract.
-2. **Router walk.** A build-time script (`scripts/sdk-codegen.ts`) reflects on
-   the runtime router object (imported lazily, never bundled) to enumerate
-   procedures: `workspaces.boards.list`, `issues.create`, etc.
-3. **Wrapper emission.** For each procedure, emit a method on the appropriate
-   namespace class that:
-   - Forwards typed input via `inferRouterInputs<AppRouter>[path]`.
-   - Returns typed output via `inferRouterOutputs<AppRouter>[path]`.
-   - Threads through the shared transport (auth, retry, telemetry).
-4. **Subpath entry generation.** Each top-level namespace becomes a subpath
-   export (`@planoda/sdk/issues`) so consumers can import a slice.
-5. **Coverage assertion.** After codegen, `scripts/sdk-coverage.sh` diff-checks
-   the generated method list against the live router and fails CI on drift.
+A future wave *may* generate the per-resource wrappers from the server's exported
+types so the SDK tracks the API automatically. Sketch, if we pursue it:
 
-This pipeline runs in CI on every change to `src/server/router/**` so the SDK
-is always in lockstep with the API.
+1. **Type import.** `import type { AppRouter } from '@/server/router'` — build
+   against the same type the server publishes; the TypeScript type is the contract.
+2. **Router walk.** A build-time script reflects over the (lazily imported, never
+   bundled) router to enumerate the REST-exposed procedures.
+3. **Wrapper emission.** Emit a typed method per procedure, forwarding
+   `inferRouterInputs`/returning `inferRouterOutputs` through the shared transport.
+4. **Coverage assertion.** Diff the generated method list against the live
+   registry and fail CI on drift.
+
+Until that lands, treat the hand-written modules as the source of truth. The
+tradeoff is explicit: a curated surface costs a little manual upkeep but avoids
+leaking every internal procedure and keeps the contract intentional.
 
 ## Tree-shaking strategy
 
