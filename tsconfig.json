@@ -1,6 +1,21 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "types": [],
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
@@ -9,12 +24,7 @@
     "composite": true,
     "noEmit": false,
     "incremental": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "lib": ["ES2022", "DOM"],
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true,
-    "types": []
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["dist", "node_modules", "src/**/*.test.ts"]
